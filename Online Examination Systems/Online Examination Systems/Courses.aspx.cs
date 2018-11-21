@@ -11,7 +11,7 @@ namespace Online_Examination_Systems
 {
     public partial class Courses : System.Web.UI.Page
     {
-       SqlConnection sqlCon =new  SqlConnection(@"Data Source=DESKTOP-G5G0278;Initial Catalog=Courses;Integrated Security=true;");
+       SqlConnection sqlCon =new  SqlConnection(@"Data Source=SAIRA-PC SQLEXPRESS;Initial Catalog=Add;Integrated Security=True");
         protected void Page_Load(object sender, EventArgs e)
         {
             if(!IsPostBack)
@@ -87,6 +87,21 @@ namespace Online_Examination_Systems
             txtCourseId.Text = dtbl.Rows[0]["CourseId"].ToString();
             btnAdd.Text = "Update";
             btnDelete.Enabled = true;
+        }
+
+        protected void btnDelete_Click(object sender, EventArgs e)
+        {
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            SqlCommand sqlCmd = new SqlCommand("CourseDeleteById", sqlCon);
+            sqlCmd.CommandType = CommandType.StoredProcedure;
+            sqlCmd.Parameters.AddWithValue("@CourseNo",Convert.ToInt32(hfCourseNo.Value));
+            sqlCmd.ExecuteNonQuery();
+            sqlCon.Close();
+            Clear();
+            FillGridView();
+            lblSuccessMessage.Text = "Deleted Successfully";
+
         }
 
         
